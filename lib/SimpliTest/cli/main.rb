@@ -118,7 +118,9 @@ module SimpliTest
         end
 
         def run_in_parallel
-          raise "Parallelization is not supported on Windows" if windows?
+          if @os == "Windows"
+            raise "Parallelization is not supported on Windows"
+          end
           begin
             `parallel_cucumber features`
           rescue Exception => e

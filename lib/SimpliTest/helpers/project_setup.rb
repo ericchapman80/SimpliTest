@@ -1,31 +1,49 @@
 module ProjectSetupHelpers
 
   #*****************************REQUIRES/INCLUDE/EXTEND******************************************
-  require 'rbconfig'
-  require File.join(File.dirname(__FILE__), 'file.rb')
-  require File.join(File.dirname(__FILE__), 'windows_ui.rb') 
+  require 'RbConfig'
 
-  def self.included klass #always include FileHelpers/WindowsUIHelpers with this module
+@os = RbConfig::CONFIG['host_os']
+
+case
+	when @os.downcase.include?('linux')
+		@os = 'linux'
+	when @os.downcase =~ /darwin|mac os/
+		@os = 'MacOSX'
+	when @os.downcase =~ /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+		@os = 'Windows'
+	when @os.downcase =~ /solaris|bsd/
+		@os = 'Unix'
+	else
+		raise "Unknown operating system"
+	exit
+end
+
+	
+
+  require File.join(File.dirname(__FILE__), 'file.rb')
+
+if @os == "Windows"
+	require File.join(File.dirname(__FILE__), 'windows_ui.rb') 
+end
+
+  def self.included klass #always include FileHelpers with this module
     klass.class_eval do
       include FileHelpers
-      include WindowsUIHelpers
+      	if @os == "Windows"
+		      include WindowsUIHelpers
+	     end
     end
   end
 
   def self.extended klass #always extend FileHelpers/WindowsUIHelpers with this module
     klass.class_eval do
       extend FileHelpers
-      extend WindowsUIHelpers
+	     if @os == "Windows"
+     		extend WindowsUIHelpers
+	     end
     end
   end
-
-  #**********************************PLATFORM****************************************************
-
-  def windows?
-    @windows = RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
-  end
-
-  #**********************************PROJECT******************************************************
 
 
   #TODO: Need a massive fix...some of this stuff isn't even right...
@@ -105,12 +123,12 @@ module ProjectSetupHelpers
   #*****************************USER ALERTS/CONFIRMATION************************************************
 
   def alert(message)
-    windows? ? user_informed_via_prompt?(message) : puts(message)
+    @os == "Windows" ? user_informed_via_prompt?(message) : puts(message)
   end
 
   def user_consents?
     question = initialization_message + "\nThis will create new files and folders in the current directory. \nWould you still like to proceed?(Y/n)"
-    windows? ? user_consents_via_prompt?(question) : user_consents_via_console?(question)
+    @os == "Windows"  ? user_consents_via_prompt?(question) : user_consents_via_console?(question)
   end
 
   def user_consents_via_console?(question)
