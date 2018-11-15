@@ -10,7 +10,6 @@ SimpliTest (formerly known as Café) was created by CGI Group Inc. members to ac
 	
 	3) Build this Ruby gem
 			$ gem build SimpliTest.gemspec
-			$ brew install freetds
     		$ gem install SimpliTest
 
 	4) Use it
