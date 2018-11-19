@@ -9,9 +9,14 @@ SimpliTest (formerly known as Café) was created by CGI Group Inc. members to ac
 		- http://www.seleniumhq.org/projects/webdriver/
 	
 	3) Build this Ruby gem
-			$ gem build SimpliTest.gemspec
+		$ gem build SimpliTest.gemspec
     		$ gem install SimpliTest
+		$ If you receive an error related to tiny_tds not being installed
+		  you are likely facing an issue related to your computer's architecture.
+	          Run this command to indicate the architecture.
+		  `sudo ARCHFLAGS="-arch x86_64" gem install tiny_tds`
 
+		$ You should now successfully be able to run the gem install.
 	4) Use it
 		$SimpliTest new MyNewSimpliTestProject
 			or cd into an existing directory and run 
